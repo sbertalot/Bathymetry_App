@@ -1,20 +1,26 @@
-name: Setup Emscripten toolchain
-  # You may pin to the exact commit or the version.
-  # uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021
-    uses: mymindstorm/setup-emsdk@v14
-    with:
-    # Version to install
-    version: # optional, default is latest
-    # If true will not download any version of Emscripten. emsdk will still be added to PATH.
-    no-install: # optional
-    # If true will not cache any downloads with tc.cacheDir.
-    no-cache: # optional
-    # Directory to cache emsdk in. This folder will go under $GITHUB_HOME (I.e. build dir) and be cached using @actions/cache.
-    actions-cache-folder: # optional, default is 
-    # Override the cache key. By default, it is `{Github workflow name}-{Emscripten version}-{OS type}-${CPU architecture}`.
-    cache-key: # optional, default is 
-    # Fetch package information for all the new tools and SDK versions
-    update: # optional
-    # Deprecated in favor of `update`.
-    update-tags: # optional
-          
+Name: Setup Emscripten toolchain
+
+# You may pin to the exact commit or the version.
+# uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021
+uses: mymindstorm/setup-emsdk@v14
+with:
+  # Version to install (optional, default is latest)
+  version: latest  # You should specify a version, e.g., 'latest', or leave it empty for the default
+
+  # If true, will not download any version of Emscripten. emsdk will still be added to PATH.
+  no-install: false  # Optional, specify 'true' or 'false'
+
+  # If true, will not cache any downloads with tc.cacheDir.
+  no-cache: false  # Optional, specify 'true' or 'false'
+
+  # Directory to cache emsdk in. This folder will go under $GITHUB_HOME (i.e. build dir) and be cached using @actions/cache.
+  actions-cache-folder: '/tmp/cache'  # Specify your desired cache folder or leave empty
+
+  # Override the cache key. By default, it is `{Github workflow name}-{Emscripten version}-{OS type}-${CPU architecture}`.
+  cache-key: 'my-custom-cache-key'  # Optional, specify your cache key or leave empty
+
+  # Fetch package information for all the new tools and SDK versions
+  update: true  # Optional, specify 'true' or 'false'
+
+  # Deprecated in favor of `update`.
+  update-tags: false  # Optional, specify 'true' or 'false'
