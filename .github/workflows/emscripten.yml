@@ -27,10 +27,11 @@ jobs:
           update: true
           update-tags: false
 
-      # Step 3: Set up Emscripten environment (source emsdk_env.sh)
+      # Step 3: Find and source emsdk_env.sh
       - name: Set up Emscripten environment
         run: |
-          source $HOME/emsdk/emsdk_env.sh  # Correct the path to the emsdk_env.sh script
+          # Locate the emsdk_env.sh script and source it
+          source $(find $HOME -type f -name emsdk_env.sh | head -n 1)
 
       # Step 4: Install build dependencies (if needed)
       - name: Install build dependencies
