@@ -21,41 +21,25 @@ jobs:
       - name: Setup Emscripten toolchain
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: latest  # Emscripten version
-          no-install: false  # Don't skip the installation
-          no-cache: false  # Use caching if needed
-          actions-cache-folder: '/tmp/cache'  # Ensure this folder exists
-          cache-key: 'my-custom-cache-key'  # Optional cache key
+          version: latest  # Emscripten version to install (optional)
+          no-install: false  # Don't skip installation
+          no-cache: false  # Cache is not being used
           update: true
           update-tags: false
 
-      # Step 3: Create cache directory (if you plan to cache specific directories/files)
-      - name: Create cache directory
-        run: |
-          mkdir -p /tmp/cache  # Ensure the cache folder exists before caching
-
-      # Step 4: Cache emsdk and other directories (if you want to cache)
-      - name: Cache Emscripten toolchain
-        uses: actions/cache@v3
-        with:
-          path: /tmp/cache  # Path to cache (ensure it exists and contains files)
-          key: ${{ runner.os }}-emsdk-${{ hashFiles('**/emsdk/*') }}
-          restore-keys: |
-            ${{ runner.os }}-emsdk-
-
-      # Step 5: Install build dependencies (if needed)
+      # Step 3: Install build dependencies (if needed)
       - name: Install build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
 
-      # Step 6: Build project with Emscripten
+      # Step 4: Build project with Emscripten
       - name: Build project with Emscripten
         run: |
           source ./emsdk/emsdk_env.sh  # Ensure environment is set for the current shell
           emcc src/main.cpp -o build/main.js  # Run Emscripten build
 
-      # Step 7: Upload build artifacts (optional)
+      # Step 5: Upload build artifacts (optional)
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
