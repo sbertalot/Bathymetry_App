@@ -1,0 +1,43 @@
+name: Build with Emscripten
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Emscripten
+      - name: Set up Emscripten
+        uses: emscripten/actions/setup@v3
+        with:
+          version: 'latest'  # Use the desired Emscripten version (or 'latest')
+
+      # Step 3: Install dependencies (if necessary)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      # Step 4: Build your project
+      - name: Build project with Emscripten
+        run: |
+          # Example: Run Emscripten's emcc to compile your project
+          emcc src/main.cpp -o build/main.js
+          
+      # Optional: Step 5 - Upload build artifacts (if you want to store the output)
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: build/
