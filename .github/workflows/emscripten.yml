@@ -1,25 +1,64 @@
-- name: Setup Emscripten toolchain
-  # You may pin to the exact commit or the version.
-  # uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021
-  uses: mymindstorm/setup-emsdk@v14
-  with:
-    # Version to install (optional, default is latest)
-    version: latest  # Provide a version or leave empty for default
+name: Build with Emscripten
 
-    # If true will not download any version of Emscripten. emsdk will still be added to PATH.
-    no-install: false  # Optional, specify 'true' or 'false'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-    # If true will not cache any downloads with tc.cacheDir.
-    no-cache: false  # Optional, specify 'true' or 'false'
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    # Directory to cache emsdk in. This folder will go under $GITHUB_HOME (I.e. build dir) and be cached using @actions/cache.
-    actions-cache-folder: '/tmp/cache'  # Optional, specify your desired cache folder or leave empty
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Override the cache key. By default, it is `{Github workflow name}-{Emscripten version}-{OS type}-${CPU architecture}`.
-    cache-key: 'my-custom-cache-key'  # Optional, specify your cache key or leave empty
+      # Step 2: Setup Emscripten toolchain
+      - name: Setup Emscripten toolchain
+        # You may pin to the exact commit or the version.
+        # uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          # Version to install (optional, default is latest)
+          version: latest  # Provide a version or leave empty for default
 
-    # Fetch package information for all the new tools and SDK versions
-    update: true  # Optional, specify 'true' or 'false'
+          # If true will not download any version of Emscripten. emsdk will still be added to PATH.
+          no-install: false  # Optional, specify 'true' or 'false'
 
-    # Deprecated in favor of `update`.
-    update-tags: false  # Optional, specify 'true' or 'false'
+          # If true will not cache any downloads with tc.cacheDir.
+          no-cache: false  # Optional, specify 'true' or 'false'
+
+          # Directory to cache emsdk in. This folder will go under $GITHUB_HOME (I.e. build dir) and be cached using @actions/cache.
+          actions-cache-folder: '/tmp/cache'  # Optional, specify your desired cache folder or leave empty
+
+          # Override the cache key. By default, it is `{Github workflow name}-{Emscripten version}-{OS type}-${CPU architecture}`.
+          cache-key: 'my-custom-cache-key'  # Optional, specify your cache key or leave empty
+
+          # Fetch package information for all the new tools and SDK versions
+          update: true  # Optional, specify 'true' or 'false'
+
+          # Deprecated in favor of `update`.
+          update-tags: false  # Optional, specify 'true' or 'false'
+
+      # Step 3: Install build dependencies (if needed)
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      # Step 4: Build project with Emscripten
+      - name: Build project with Emscripten
+        run: |
+          source ./emsdk/emsdk_env.sh  # Ensure environment is set for the current shell
+          emcc src/main.cpp -o build/main.js  # Run Emscripten build
+
+      # Optional: Step 5 - Upload build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: build/
