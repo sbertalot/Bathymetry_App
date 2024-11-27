@@ -1,2 +1,2 @@
 # Bathymetry_App
-Web App designed to visualizes changes in freshwater habitat 
+Web app designed to visualizes changes in freshwater habitat 
