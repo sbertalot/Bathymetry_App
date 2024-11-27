@@ -1,43 +1,31 @@
-name: Build with Emscripten
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Check out the repository code
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Emscripten
-      - name: Set up Emscripten
-        uses: emscripten/actions/setup@v3
-        with:
-          version: 'latest'  # Use the desired Emscripten version (or 'latest')
-
-      # Step 3: Install dependencies (if necessary)
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
-
-      # Step 4: Build your project
-      - name: Build project with Emscripten
-        run: |
-          # Example: Run Emscripten's emcc to compile your project
-          emcc src/main.cpp -o build/main.js
-          
-      # Optional: Step 5 - Upload build artifacts (if you want to store the output)
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-output
-          path: build/
+name: 'Setup Emscripten toolchain'
+description: 'Download emsdk and optionally install a version of Emscripten'
+author: 'mymindstorm'
+inputs:
+  version:
+    description: 'Version to install'
+    default: 'latest'
+  no-install:
+    description: "If true will not download any version of Emscripten. emsdk will still be added to PATH."
+    default: false
+  no-cache:
+    description: "If true will not cache any downloads with tc.cacheDir."
+    default: false
+  actions-cache-folder:
+    description: "Directory to cache emsdk in. This folder will go under $GITHUB_HOME (I.e. build dir) and be cached using @actions/cache."
+    default: ''
+  cache-key:
+    description: "Override the cache key. By default, it is `{Github workflow name}-{Emscripten version}-{OS type}-${CPU architecture}`."
+    default: ''
+  update:
+    description: "Fetch package information for all the new tools and SDK versions"
+    default: false
+  update-tags:
+    description: "Deprecated in favor of `update`."
+    default: false
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+branding:
+  icon: 'download'
+  color: 'green'
