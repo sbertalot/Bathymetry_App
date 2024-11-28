@@ -40,12 +40,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential
 
-      # Step 5: Compile with Emscripten and generate .js.metadata files
+      # Step 5: List files in the repository for debugging (to verify the file path)
+      - name: List files in repository
+        run: |
+          ls -R
+
+      # Step 6: Compile with Emscripten and generate .js.metadata files
       - name: Build project with Emscripten and generate .js.metadata files
         run: |
-          emcc ./src/main.cpp -o build/main.js --js-meta=build/main.js.metadata  # Ensure correct path and metadata output
+          emcc ./src/main.cpp -o build/main.js --js-meta=build/main.js.metadata  # Adjust the path based on actual location of main.cpp
 
-      # Step 6: Upload build artifacts (optional)
+      # Step 7: Upload build artifacts (optional)
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
