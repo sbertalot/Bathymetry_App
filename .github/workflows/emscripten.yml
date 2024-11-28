@@ -27,22 +27,23 @@ jobs:
           update: true
           update-tags: false
 
-      # Step 3: Find and source emsdk_env.sh
+      # Step 3: Set up Emscripten environment (source emsdk_env.sh)
       - name: Set up Emscripten environment
         run: |
           # Locate the emsdk_env.sh script and source it
           source $(find $HOME -type f -name emsdk_env.sh | head -n 1)
 
-      # Step 4: Install build dependencies (if needed)
+      # Step 4: (Optional) Install build dependencies (if needed)
+      # This is an optional step and can be skipped if you don't need additional dependencies
       - name: Install build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
 
-      # Step 5: Build project with Emscripten
-      - name: Build project with Emscripten
+      # Step 5: Compile with Emscripten and generate .js.metadata files
+      - name: Build project with Emscripten and generate .js.metadata files
         run: |
-          emcc src/main.cpp -o build/main.js  # Run Emscripten build
+          emcc ./src/main.cpp -o build/main.js --js-meta=build/main.js.metadata  # Ensure correct path and metadata output
 
       # Step 6: Upload build artifacts (optional)
       - name: Upload build artifacts
